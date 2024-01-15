@@ -1,0 +1,7 @@
+{
+  "component": "simbot.kook",
+  "ticket": {
+    "clientId": "you client id",
+    "token": "you token"
+  }
+}

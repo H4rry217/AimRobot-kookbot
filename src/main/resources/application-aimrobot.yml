@@ -1,0 +1,7 @@
+remote-server:
+  url: http://api.example.test:11451
+  token: AimRobotServer4j
+
+robot:
+  guild-id-limit: 6671392748274994
+  command-prefix: "!"

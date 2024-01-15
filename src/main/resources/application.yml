@@ -1,0 +1,8 @@
+spring:
+  profiles:
+    include:
+      - aimrobot
+
+simbot:
+  bot-configuration-resources:
+    - 'classpath:simbot-bots/*.bot*'
