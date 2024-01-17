@@ -9,7 +9,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class AimRobotKookbotApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(AimRobotKookbotApplication.class, args);
+        new Thread(() -> {
+            SpringApplication.run(AimRobotKookbotApplication.class, args);
+        }).start();
     }
 
 }

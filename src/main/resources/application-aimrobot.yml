@@ -1,8 +1,12 @@
 remote-server:
+  # 远程ARSJ服务器的地址等相关设置
   url: http://api.example.test:11451
   token: AimRobotServer4j
 
 robot:
+  # 某些指令如ban指令，限制只能在一个特定Kook服务器中执行，需要在此处指明具体的Kook服务器ID
   guild-id-limit: 6671392748274994
+  # 指令前缀，当为 "!" 时，则需要 “!help” 才可正确识别
   command-prefix: "!"
+  # 管理员的KookId，如ban指令只能由指定的人执行
   admin-id: 123456

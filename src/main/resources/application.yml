@@ -4,5 +4,6 @@ spring:
       - aimrobot
 
 simbot:
+  # aimrobot.bot.json的具体路径，也可以写成本地绝对路径的形式，如 file:/home/kookbot/aimrobot.bot.json
   bot-configuration-resources:
     - 'classpath:simbot-bots/*.bot*'

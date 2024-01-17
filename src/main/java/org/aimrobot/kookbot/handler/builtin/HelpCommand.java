@@ -46,14 +46,4 @@ public class HelpCommand implements CommandListener {
     public CommandStyle getCommandStyle() {
         return CommandStyle.Style1;
     }
-
-    @Override
-    public boolean isGuildLimit() {
-        return true;
-    }
-
-    @Override
-    public boolean isRequireAdmin() {
-        return true;
-    }
 }
