@@ -25,11 +25,7 @@ public class RecentActivePlayerCommand implements CommandListener {
 
     @Override
     public Message processEvent(CommandHandler commandHandler) {
-
-        if(!commandHandler.getSender().isOwner()) return Text.of("无权执行");
-
         String name = commandHandler.getParams().get("param");
-
         AimRobotServerAPI aimRobotServerAPI = RequestUtils.getInstance().getRemoteServer();
 
         try {

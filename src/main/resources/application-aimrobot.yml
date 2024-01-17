@@ -5,3 +5,4 @@ remote-server:
 robot:
   guild-id-limit: 6671392748274994
   command-prefix: "!"
+  admin-id: 123456

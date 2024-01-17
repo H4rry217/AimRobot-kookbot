@@ -1,8 +1,9 @@
 package org.aimrobot.kookbot.handler;
 
-import love.forte.simbot.component.kook.KookMember;
+import lombok.Getter;
 import love.forte.simbot.component.kook.bot.KookBot;
-import love.forte.simbot.component.kook.event.KookChannelMessageEvent;
+import love.forte.simbot.component.kook.event.KookEvent;
+import love.forte.simbot.definition.GuildMember;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,24 +16,24 @@ import java.util.Map;
 
 public abstract class CommandHandler {
 
-    protected KookChannelMessageEvent messageEvent;
+    protected EventData eventData;
     protected final Map<String, String> params;
 
-    public CommandHandler(KookChannelMessageEvent event, Map<String, String> params){
-        this.messageEvent = event;
+    public CommandHandler(EventData eventData, Map<String, String> params){
+        this.eventData = eventData;
         this.params = params;
     }
 
-    public CommandHandler(KookChannelMessageEvent event){
-        this(event, new HashMap<>());
+    public CommandHandler(EventData eventData){
+        this(eventData, new HashMap<>());
     }
 
-    public KookChannelMessageEvent getEvent(){
-        return this.messageEvent;
+    public KookEvent getEvent(){
+        return this.eventData.getEvent();
     }
 
-    public KookMember getSender(){
-        return this.getEvent().getAuthor();
+    public GuildMember getSender(){
+        return this.eventData.getMember();
     }
 
     public KookBot getBot(){
@@ -41,6 +42,19 @@ public abstract class CommandHandler {
 
     public Map<String, String> getParams(){
         return this.params;
+    }
+
+    @Getter
+    public static class EventData{
+
+        private final KookEvent event;
+        private final GuildMember member;
+
+        public EventData(KookEvent event, GuildMember member){
+            this.event = event;
+            this.member = member;
+        }
+
     }
 
 

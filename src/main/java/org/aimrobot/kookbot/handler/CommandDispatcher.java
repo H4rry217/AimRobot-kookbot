@@ -2,9 +2,12 @@ package org.aimrobot.kookbot.handler;
 
 import love.forte.simbot.ID;
 import love.forte.simbot.component.kook.event.KookChannelMessageEvent;
+import love.forte.simbot.component.kook.event.KookEvent;
+import love.forte.simbot.definition.GuildMember;
 import love.forte.simbot.event.GroupMessageEvent;
 import love.forte.simbot.event.MessageEvent;
 import love.forte.simbot.message.Message;
+import love.forte.simbot.message.MessagesBuilder;
 import love.forte.simbot.message.Text;
 import org.aimrobot.kookbot.BotConfig;
 import org.aimrobot.kookbot.handler.builtin.*;
@@ -13,10 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @program: AimRobot-kookbot
@@ -32,7 +32,7 @@ public class CommandDispatcher {
     @Autowired
     private BotConfig botConfig;
 
-    private final Map<String, List<CommandListener>> LISTENERS = new HashMap<>();
+    private final Map<String, CommandListener> LISTENERS = new HashMap<>();
 
     public CommandDispatcher(){
         registerListener(new BanPlayerCommand());
@@ -42,24 +42,21 @@ public class CommandDispatcher {
         registerListener(new QueryServerCommand());
         registerListener(new RemoteOperateCommand());
         registerListener(new RecentActivePlayerCommand());
+        registerListener(new HelpCommand());
         //registerListener(new BotStatusCommand());
+    }
+
+    public Set<Map.Entry<String, CommandListener>> getCommandListener(){
+        return LISTENERS.entrySet();
     }
 
     public void registerListener(CommandListener commandListener){
         if(commandListener.getCommandKeyword() != null && !commandListener.getCommandKeyword().isBlank()){
-            synchronized (LISTENERS){
-                List<CommandListener> listeners = LISTENERS.getOrDefault(commandListener.getCommandKeyword(), new ArrayList<>());
-                listeners.add(commandListener);
-
-                LISTENERS.put(commandListener.getCommandKeyword(), listeners);
-            }
+            LISTENERS.putIfAbsent(commandListener.getCommandKeyword(), commandListener);
         }
     }
 
-    public void receive(MessageEvent messageEvent){
-        String content = messageEvent.getMessageContent().getPlainText().replace("\\", "");
-        logger.info("COMMAND -> {}", content);
-
+    public Message receive(String content, KookEvent event, GuildMember sender){
         if(botConfig.getCommandPrefix().length() == 0 || content.startsWith(botConfig.getCommandPrefix())){
             String part2 = content.substring(botConfig.getCommandPrefix().length());
 
@@ -125,7 +122,9 @@ public class CommandDispatcher {
                     }
                 }
 
-                CommandHandler commandHandler = new ChannelCommandHandler((KookChannelMessageEvent) messageEvent, paramMap);
+                CommandHandler commandHandler = new ChannelCommandHandler(new CommandHandler.EventData(event, sender), paramMap);
+
+                logger.info("COMMAND -> {}", content);
 
                 if(paramMap.size() > 0){
                     StringBuilder logBuilder = new StringBuilder("ARGS -> ");
@@ -133,20 +132,21 @@ public class CommandDispatcher {
                     logger.warn(logBuilder.toString());
                 }
 
-                for (CommandListener commandListener : LISTENERS.get(keyword)) {
-                    if(commandListener.isGuildLimit() && !((KookChannelMessageEvent) messageEvent).getAuthor().getGuildId().equals(ID.$(botConfig.getGuildIdLimit()))){
-                        messageEvent.replyAsync(Text.of("该指令无权在当前Kook服务器执行!"));
-                    }else{
-                        Message reply;
-                        if((reply = commandListener.processEvent(commandHandler)) != null){
-                            messageEvent.replyAsync(reply);
-                        }
-                    }
+                CommandListener commandListener = LISTENERS.get(keyword);
+                if(commandListener.isGuildLimit() && !commandHandler.getSender().getGuild().getId().equals(ID.$(botConfig.getGuildIdLimit()))){
+                    return Text.of("该指令无权在当前Kook服务器执行!");
                 }
+
+                if(commandListener.isRequireAdmin() && !commandHandler.getSender().getId().equals(ID.$(botConfig.getAdminId()))){
+                    return Text.of("无权执行管理员指令!");
+                }
+
+                return commandListener.processEvent(commandHandler);
             }
 
         }
 
+        return null;
     }
 
     public static Map<String, String> getArgs(String paramsString){

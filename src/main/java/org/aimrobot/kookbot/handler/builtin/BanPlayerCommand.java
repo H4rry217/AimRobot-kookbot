@@ -24,8 +24,6 @@ public class BanPlayerCommand implements CommandListener {
     @Override
     public Message processEvent(CommandHandler commandHandler) {
 
-        if(!commandHandler.getSender().isOwner()) return Text.of("无权执行");
-
         if(commandHandler.getParams().get("param") != null){
 
             String playerName = commandHandler.getParams().get("param");
@@ -65,6 +63,11 @@ public class BanPlayerCommand implements CommandListener {
 
     @Override
     public boolean isGuildLimit() {
+        return true;
+    }
+
+    @Override
+    public boolean isRequireAdmin() {
         return true;
     }
 

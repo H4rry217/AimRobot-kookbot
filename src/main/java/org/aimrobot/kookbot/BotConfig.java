@@ -30,4 +30,7 @@ public class BotConfig {
     @Value("${robot.guild-id-limit}")
     private String guildIdLimit;
 
+    @Value("${robot.admin-id}")
+    private Long adminId;
+
 }

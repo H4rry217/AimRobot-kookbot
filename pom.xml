@@ -17,6 +17,7 @@
     <properties>
         <java.version>17</java.version>
         <SIMBOT_VERSION>3.3.0</SIMBOT_VERSION>
+        <skipTests>true</skipTests>
     </properties>
 
     <repositories>

@@ -13,12 +13,12 @@ import java.util.Map;
 
 public class ChannelCommandHandler extends CommandHandler {
 
-    public ChannelCommandHandler(KookChannelMessageEvent event, Map<String, String> params) {
-        super(event, params);
+    public ChannelCommandHandler(EventData eventData, Map<String, String> params) {
+        super(eventData, params);
     }
 
     public KookMessageEvent.Channel getChannel(){
-        return (KookMessageEvent.Channel) this.messageEvent.getChannel();
+        return (KookMessageEvent.Channel) ((KookChannelMessageEvent)this.eventData.getEvent()).getChannel();
     }
 
 }

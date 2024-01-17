@@ -67,4 +67,9 @@ public class SendChatCommand implements CommandListener {
         return true;
     }
 
+    @Override
+    public boolean isRequireAdmin() {
+        return true;
+    }
+
 }

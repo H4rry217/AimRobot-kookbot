@@ -21,6 +21,10 @@ public interface CommandListener {
         return false;
     }
 
+    public default boolean isRequireAdmin(){
+        return false;
+    }
+
     public enum CommandStyle{
 
         Style1("cmd=param"),
