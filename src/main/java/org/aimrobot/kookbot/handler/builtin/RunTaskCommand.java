@@ -14,30 +14,28 @@ import java.io.IOException;
 import java.util.HashMap;
 
 /**
- * @program: AimRobot-QQBot
+ * @program: AimRobot-kookbot
  * @description:
  * @author: H4rry217
  **/
 
-public class SendChatCommand implements CommandListener {
+public class RunTaskCommand implements CommandListener {
 
     @Override
     public Message processEvent(CommandHandler commandHandler) {
+        if(commandHandler.getParams().get("param") != null) {
 
-        if(commandHandler.getParams().get("param") != null){
-
-            String content = commandHandler.getParams().get("param");
             String serverId = commandHandler.getParams().get("sid");
+            String task = commandHandler.getParams().get("param");
 
             AimRobotServerAPI aimRobotServerAPI = RequestUtils.getInstance().getRemoteServer();
 
             try {
                 JsonNode response = RequestUtils.getJsonNode(
-                        aimRobotServerAPI.sendChat(SpringUtils.getBean(BotConfig.class).getAccessToken(), new HashMap<>(){{
+                        aimRobotServerAPI.runTask(SpringUtils.getBean(BotConfig.class).getAccessToken(), new HashMap<>(){{
                             put("serverId", serverId);
-                            put("message", "管理员的大喇叭: "+content);
+                            put("task", task);
                         }}).execute().body().string());
-
 
                 return Text.of(response.get("msg").asText());
 
@@ -52,7 +50,7 @@ public class SendChatCommand implements CommandListener {
 
     @Override
     public String getCommandKeyword() {
-        return "lt";
+        return "task";
     }
 
     @Override
@@ -61,13 +59,12 @@ public class SendChatCommand implements CommandListener {
     }
 
     @Override
-    public boolean isGuildLimit() {
-        return true;
-    }
-
-    @Override
     public boolean isRequireAdmin() {
         return true;
     }
 
+    @Override
+    public boolean isGuildLimit() {
+        return true;
+    }
 }

@@ -27,12 +27,12 @@ import java.util.*;
 @Component
 public class CommandDispatcher {
 
-    private final Logger logger = LoggerFactory.getLogger(CommandDispatcher.class);
+    protected final Logger logger = LoggerFactory.getLogger(CommandDispatcher.class);
 
     @Autowired
-    private BotConfig botConfig;
+    protected BotConfig botConfig;
 
-    private final Map<String, CommandListener> LISTENERS = new HashMap<>();
+    protected final Map<String, CommandListener> LISTENERS = new HashMap<>();
 
     public CommandDispatcher(){
         registerListener(new BanPlayerCommand());
@@ -43,6 +43,10 @@ public class CommandDispatcher {
         registerListener(new RemoteOperateCommand());
         registerListener(new RecentActivePlayerCommand());
         registerListener(new HelpCommand());
+        registerListener(new ScreenshotCommand());
+        registerListener(new RunTaskCommand());
+        registerListener(new FindBanCommand());
+        registerListener(new ChatHistoryCommand());
         //registerListener(new BotStatusCommand());
     }
 

@@ -43,7 +43,7 @@ public class RequestUtils {
     public RequestUtils(){
         this.remoteServer = new Retrofit.Builder()
                 .baseUrl(SpringUtils.getBean(BotConfig.class).getApiUrl())
-                .client(new OkHttpClient.Builder().connectTimeout(5000, TimeUnit.MILLISECONDS).build())
+                .client(new OkHttpClient.Builder().connectTimeout(30, TimeUnit.SECONDS).readTimeout(30, TimeUnit.SECONDS).build())
                 .addConverterFactory(JacksonConverterFactory.create())
                 .build().create(AimRobotServerAPI.class);
 

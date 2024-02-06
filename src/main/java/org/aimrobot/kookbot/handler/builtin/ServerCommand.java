@@ -13,7 +13,9 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,22 +30,28 @@ public class ServerCommand implements CommandListener {
     public Message processEvent(CommandHandler commandHandler) {
 
         AimRobotServerAPI api = RequestUtils.getInstance().getRemoteServer();
-        Call<ResponseBody> call = api.getServerIds();
+        Call<ResponseBody> call = api.getServerInfos();
 
         try {
             Response<ResponseBody> execute = call.execute();
             JsonNode jsonNode = RequestUtils.getJsonNode(execute.body().string());
 
             List<Object[]> data = new ArrayList<>();
-            jsonNode.get("data").get("result").elements().forEachRemaining((node) -> {
+            jsonNode.get("data").get("result").fields().forEachRemaining((entry) -> {
+                var serverData = entry.getValue();
                 data.add(new Object[]{
-                        node.asText()
+                        entry.getKey(),
+                        serverData.get("alive").asBoolean(),
+                        serverData.has("runTask")? serverData.get("runTask").asText(): "-",
+                        serverData.has("state")? serverData.get("state"): "-",
+                        serverData.has("errorCount")? serverData.get("errorCount").asInt(): "-",
+                        serverData.has("timestamp")? new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(serverData.get("timestamp").asLong())): "-"
                 });
             });
 
             return BotUtils.textToResourceImage(
                     BotUtils.prettyShow(
-                            new String[]{"ServerID"},
+                            new String[]{"ServerID", "Alive", "Task", "State", "ErrorCount", "LastActive"},
                             data,
                             "==========当前已连接ARL=========="
                     )
