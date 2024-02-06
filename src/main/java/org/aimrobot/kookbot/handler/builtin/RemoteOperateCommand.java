@@ -50,7 +50,7 @@ public class RemoteOperateCommand implements CommandListener {
 
     @Override
     public String getCommandKeyword() {
-        return "exce";
+        return "exec";
     }
 
     @Override

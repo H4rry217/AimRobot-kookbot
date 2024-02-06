@@ -40,3 +40,6 @@ root@example:/home/kookbot# /home/jdk-17.0.2/bin/java -jar kookbot-0.0.1-SNAPSHO
 ![教程](_staticres/10.png "1")
 ![教程](_staticres/11.png "1")
 ![教程](_staticres/12.png "1")
+
+## 指令参考
+[指令说明(非实时更新)](COMMAND.md)
